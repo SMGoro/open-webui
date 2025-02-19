@@ -12,6 +12,8 @@
 	} from '$lib/apis/functions';
 	import { getToolValvesById, getToolValvesSpecById, updateToolValvesById } from '$lib/apis/tools';
 	import Spinner from '../../common/Spinner.svelte';
+	import Switch from '$lib/components/common/Switch.svelte';
+	import Valves from '$lib/components/common/Valves.svelte';
 
 	const i18n = getContext('i18n');
 	const dispatch = createEventDispatcher();
@@ -42,11 +44,11 @@
 
 			if (type === 'tool') {
 				res = await updateToolValvesById(localStorage.token, id, valves).catch((error) => {
-					toast.error(error);
+					toast.error(`${error}`);
 				});
 			} else if (type === 'function') {
 				res = await updateFunctionValvesById(localStorage.token, id, valves).catch((error) => {
-					toast.error(error);
+					toast.error(`${error}`);
 				});
 			}
 
@@ -126,64 +128,7 @@
 				>
 					<div class="px-1">
 						{#if !loading}
-							{#if valvesSpec}
-								{#each Object.keys(valvesSpec.properties) as property, idx}
-									<div class=" py-0.5 w-full justify-between">
-										<div class="flex w-full justify-between">
-											<div class=" self-center text-xs font-medium">
-												{valvesSpec.properties[property].title}
-
-												{#if (valvesSpec?.required ?? []).includes(property)}
-													<span class=" text-gray-500">*required</span>
-												{/if}
-											</div>
-
-											<button
-												class="p-1 px-3 text-xs flex rounded transition"
-												type="button"
-												on:click={() => {
-													valves[property] = (valves[property] ?? null) === null ? '' : null;
-												}}
-											>
-												{#if (valves[property] ?? null) === null}
-													<span class="ml-2 self-center">
-														{#if (valvesSpec?.required ?? []).includes(property)}
-															{$i18n.t('None')}
-														{:else}
-															{$i18n.t('Default')}
-														{/if}
-													</span>
-												{:else}
-													<span class="ml-2 self-center"> {$i18n.t('Custom')} </span>
-												{/if}
-											</button>
-										</div>
-
-										{#if (valves[property] ?? null) !== null}
-											<div class="flex mt-0.5 mb-1.5 space-x-2">
-												<div class=" flex-1">
-													<input
-														class="w-full rounded-lg py-2 px-4 text-sm dark:text-gray-300 dark:bg-gray-850 outline-none"
-														type="text"
-														placeholder={valvesSpec.properties[property].title}
-														bind:value={valves[property]}
-														autocomplete="off"
-														required
-													/>
-												</div>
-											</div>
-										{/if}
-
-										{#if (valvesSpec.properties[property]?.description ?? null) !== null}
-											<div class="text-xs text-gray-500">
-												{valvesSpec.properties[property].description}
-											</div>
-										{/if}
-									</div>
-								{/each}
-							{:else}
-								<div class="text-sm">No valves</div>
-							{/if}
+							<Valves {valvesSpec} bind:valves />
 						{:else}
 							<Spinner className="size-5" />
 						{/if}
@@ -191,7 +136,7 @@
 
 					<div class="flex justify-end pt-3 text-sm font-medium">
 						<button
-							class=" px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-gray-100 transition rounded-lg flex flex-row space-x-1 items-center {saving
+							class="px-3.5 py-1.5 text-sm font-medium bg-black hover:bg-gray-900 text-white dark:bg-white dark:text-black dark:hover:bg-gray-100 transition rounded-full {saving
 								? ' cursor-not-allowed'
 								: ''}"
 							type="submit"
