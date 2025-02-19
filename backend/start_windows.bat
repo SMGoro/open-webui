@@ -1,3 +1,8 @@
+:: 设置python路径
+SET PYTHONPATH=..\.conda
+:: 添加到PATH中，以便在命令行运行脚本时使用pip和virtualenv。这将使您能够安装任何包并从虚拟环境调用它们：%PYTHONPATH:~0,4%;
+SET PATH=%PYTHONPATH%\Scripts; %PYTHONPATH%; %PATH%
+
 :: This method is not recommended, and we recommend you use the `start.sh` file with WSL instead.
 @echo off
 SETLOCAL ENABLEDELAYEDEXPANSION
@@ -31,3 +36,5 @@ IF "%WEBUI_SECRET_KEY%%WEBUI_JWT_SECRET_KEY%" == " " (
 :: Execute uvicorn
 SET "WEBUI_SECRET_KEY=%WEBUI_SECRET_KEY%"
 uvicorn main:app --host "%HOST%" --port "%PORT%" --forwarded-allow-ips '*'
+
+pause
