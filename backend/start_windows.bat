@@ -13,8 +13,12 @@ SET "SCRIPT_DIR=%~dp0"
 cd /d "%SCRIPT_DIR%" || exit /b
 
 SET "KEY_FILE=.webui_secret_key"
+<<<<<<< Updated upstream
 IF "%PORT%"=="" SET PORT=8080
 IF "%HOST%"=="" SET HOST=0.0.0.0
+=======
+SET "PORT=%PORT:8081%"
+>>>>>>> Stashed changes
 SET "WEBUI_SECRET_KEY=%WEBUI_SECRET_KEY%"
 SET "WEBUI_JWT_SECRET_KEY=%WEBUI_JWT_SECRET_KEY%"
 
